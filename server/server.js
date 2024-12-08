@@ -18,6 +18,13 @@ app.use(express.json()); // Middleware to parse the request.body : allows us to 
 
 app.use("/api/products", productRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
+}
+
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server starts at http://localhost:${PORT}`);
